@@ -43,5 +43,5 @@ function verifyToken(token, onSuccess, onError) {
 // Function to reset token and redirect to login page
 function logout() {
   localStorage.removeItem(tokenKey);
-  window.location.href = '/login.html';
+  window.location.href = 'login.html';
 }

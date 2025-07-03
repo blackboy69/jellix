@@ -6,7 +6,7 @@ function displayErrorMessage(message) {
 if (accessToken) {
   verifyToken(accessToken, () => {
     // On success - redirect to index.html
-    window.location.href = '/index.html';
+    window.location.href = 'index.html';
   },
   errorMessage => {
     // On error - display error message
@@ -57,7 +57,7 @@ function authenticate(login_method, username, password, quickcode_secret) {
     const accessToken = data.AccessToken;
     if (accessToken) {
       localStorage.setItem(tokenKey, accessToken);
-      window.location.href = '/index.html';
+      window.location.href = 'index.html';
     } else {
       throw new Error('Access token not found');
     }
