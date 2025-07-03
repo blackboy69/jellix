@@ -292,7 +292,7 @@ function displayMovieInfo(movie, thumbnail) {
   // Find the elements for the backdrop and logo images
   const backgroundElement = document.querySelector('.background-container');
   const logoImageElement = document.querySelector('.feature-movie-logo');
-  
+
   // Find the elements for the title and overview
   const titleElement = document.querySelector('.movie-title');
   const overviewElement = document.querySelector('.movie-overview');
@@ -309,7 +309,7 @@ function displayMovieInfo(movie, thumbnail) {
 
   // Update the src attributes for the images
   backgroundElement.style.backgroundImage = `url(${backdropImageUrl})`;
-  
+
   if (!logoImageTag) {
     // If logo image doesn't exist, display the title
     titleElement.textContent = movie.Name;
@@ -400,9 +400,9 @@ function populateMovies() {
     displayedIds.push(list.idx);
   });
   let flag = false;
-  if (displayedIds.length == 2) {
+  if (displayedIds.length == 2) { // This condition might need adjustment if we show more than 2 lists consistently
     document.querySelectorAll('.thumbnails-group').forEach(x => x.style.display = '');
-    parentContainer.style.height = `${parentContainer.offsetHeight + 1}px`;
+    // parentContainer.style.height = `${parentContainer.offsetHeight + 1}px`; // Let CSS handle height for now
     flag = true;
   } else if (listsIdx == Math.min(... displayedIds) || (listsIdx == lists.length - 2 && displayedIds.length == 2)) {
     document.querySelector('.thumbnails-group:last-child').remove();
@@ -440,8 +440,20 @@ function populateMovies() {
     });
     swiper.jx_last_list_idx = moviesSliderStartCount - 1;
     activeSwiper = swiper;
+    // Update Swiper after a short delay to allow CSS to apply and stabilize layout
+    setTimeout(() => {
+      if (activeSwiper && typeof activeSwiper.update === 'function') {
+        activeSwiper.update();
+      }
+    }, 100);
   } else {
     activeSwiper.slideTo(0);
+    // Update Swiper after a short delay for existing instances too
+    setTimeout(() => {
+      if (activeSwiper && typeof activeSwiper.update === 'function') {
+        activeSwiper.update();
+      }
+    }, 100);
   }
   let activeList = lists.find(x => x.idx == listsIdx);
   displayMovieInfo(allMovies[activeList.movies[0]], [... document.querySelectorAll('.thumbnails-group')].find(x => x.dataset.idx == listsIdx).querySelector('.movie-thumbnail'));
@@ -514,16 +526,30 @@ function cooldown() {
 }
 
 // Event listener for mouse wheel
-document.addEventListener('wheel', (event) => {
-  if (canFire) {
-    if (event.deltaY < 0) {
-      handleUpAction();
-    } else {
-      handleDownAction();
+// Attaching to listsContainer directly to see if it's more reliable than document
+// when body is position:fixed.
+const listsContainerElement = document.querySelector('.lists-container');
+if (listsContainerElement) {
+  listsContainerElement.addEventListener('wheel', (event) => {
+    if (canFire) {
+      // Optional: Check if the event target is within the lists-container itself
+      // or one of its direct non-swiper children if necessary to avoid conflicts.
+      // For now, assume any wheel event on lists-container is for navigation.
+      if (event.deltaY < 0) {
+        handleUpAction();
+      } else {
+        handleDownAction();
+      }
+      cooldown();
+      // Prevent default scrolling action of the page, which might be relevant
+      // if listsContainerElement itself could become scrollable in some scenarios.
+      event.preventDefault();
     }
-    cooldown();
-  }
-});
+  });
+} else {
+  console.error('.lists-container element not found for wheel event listener.');
+}
+
 
 // Event listener for keyboard keys
 document.addEventListener('keydown', (event) => {
@@ -547,6 +573,57 @@ document.getElementById('nav-up').addEventListener('click', handleUpAction);
 document.getElementById('nav-down').addEventListener('click', handleDownAction);
 document.getElementById('nav-left').addEventListener('click', handleLeftAction);
 document.getElementById('nav-right').addEventListener('click', handleRightAction);
+
+// Touch-based vertical navigation
+let touchStartY = 0;
+let touchStartX = 0;
+// touchEndY and touchEndX are calculated locally in handleTouchEnd
+
+const swipeThreshold = 50; // Minimum distance for a swipe
+const swipeDirectionRatio = 1.5; // How much more vertical than horizontal for it to be a vertical swipe
+
+function handleTouchStart(event) {
+  // Only respond to single touch
+  if (event.touches.length === 1) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+  }
+}
+
+function handleTouchEnd(event) {
+  if (!canFire) return; // Respect cooldown
+
+  if (event.changedTouches.length === 1) {
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+
+    // Check if it's primarily a vertical swipe
+    if (Math.abs(diffY) > swipeThreshold && Math.abs(diffY) > Math.abs(diffX) * swipeDirectionRatio) {
+      // Swipe Down (finger moved down, content should go up, equivalent to ArrowUp)
+      if (diffY > 0) {
+        handleUpAction();
+      } else { // Swipe Up (finger moved up, content should go down, equivalent to ArrowDown)
+        handleDownAction();
+      }
+      cooldown();
+    }
+  }
+
+  // Reset start coordinates
+  touchStartX = 0;
+  touchStartY = 0;
+}
+
+// Add event listeners for touch.
+// Using `document` will capture swipes that start anywhere.
+// `passive: true` for touchstart is good for performance if not calling preventDefault() in them.
+// We don't need touchmove for this simple implementation.
+document.addEventListener('touchstart', handleTouchStart, { passive: true });
+document.addEventListener('touchend', handleTouchEnd);
+
 
 // Youtube trailers
 var fadeTimeout;  // To store the current timeout reference
@@ -637,7 +714,7 @@ function playVideo(url) {
     if (player && player.hasOwnProperty('loadVideoById')) {
       // Player is ready, execute the video play logic
       console.log('Loading trailer', url);
-      
+
       // Extract the video ID from the URL
       const videoId = url.split('v=')[1] || url.split('/').pop();
       const ampersandPosition = videoId.indexOf('&');
