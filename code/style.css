@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: 'Noto Sans';
-  src: url('fonts/NotoSans-Regular.ttf') format('truetype');
+  src: url('/fonts/NotoSans-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
   font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 400;
-  src: url('fonts/materials.woff2') format('woff2');
+  src: url(/fonts/materials.woff2) format('woff2');
 }
 
 .material-symbols-outlined {
