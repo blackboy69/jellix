@@ -297,10 +297,10 @@ div#login-selector- form-buttons {
   padding-top: 1vh;
   position: absolute;
   /* bottom: 0; */ /* Changed to top positioning */
-  top: 45vh; /* Start below the .feature area */
+  top: 50vh; /* Start below the .feature area */
   left: 0;
   width: 100%;
-  height: calc(100vh - 45vh); /* Fill remaining viewport height */
+  height: calc(100vh - 50vh); /* Fill remaining viewport height */
   /* margin-bottom: -15%; */ /* Removed, as it complicates top/height positioning */
   overflow: visible; /* For Swiper slides peeking */
   z-index: 50;

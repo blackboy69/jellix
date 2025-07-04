@@ -123,10 +123,10 @@ if (accessToken) {
     refreshMovies();
   },
   errorMessage => {
-    window.location.href = '/login.html';
+    window.location.href = 'login.html';
   });
 } else {
-  window.location.href = '/login.html';
+  window.location.href = 'login.html';
 }
 
 function displayErrorMessage(error) {
