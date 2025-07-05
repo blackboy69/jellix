@@ -286,6 +286,8 @@ function createThumbnailSlide(movie) {
 }
 
 function truncateText(text, maxLength = 300) {
+
+  if (text == null || text == undefined) return '';
   // If the text is already shorter than or equal to the max length, return it as is.
   if (text.length <= maxLength) {
     return text;
