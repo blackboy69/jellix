@@ -5,7 +5,7 @@ var listsIdx = 0;
 var activeSwiper;
 var slideIdx;
 var translation;
-const moviesSliderStartCount = 5; // reduce load on server
+const moviesSliderStartCount = 20; 
 const seed = parseInt(new Date().toISOString().slice(0, 10).replace(/-/g, ''));
 let settings = {
   filterHidePlayed: true,
@@ -285,6 +285,27 @@ function createThumbnailSlide(movie) {
   return thumbnailSlide;
 }
 
+function truncateText(text, maxLength = 300) {
+  // If the text is already shorter than or equal to the max length, return it as is.
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  // Truncate the string to the maximum length.
+  let truncated = text.substring(0, maxLength);
+
+  // Find the last space in the truncated string to avoid breaking a word.
+  const lastSpaceIndex = truncated.lastIndexOf(' ');
+
+  // If a space is found, truncate at that point.
+  if (lastSpaceIndex > 0) {
+    truncated = truncated.substring(0, lastSpaceIndex);
+  }
+
+  // Add the ellipsis and return the final string.
+  return truncated + '...';
+}
+
 function displayMovieInfo(movie, thumbnail) {
   console.log(`Displaying ${movie.Name}`);
   document.querySelectorAll('.movie-selected').forEach(x => x.classList.remove('movie-selected'));
@@ -325,10 +346,10 @@ function displayMovieInfo(movie, thumbnail) {
   // Update the text content for the title and overview
   if (translation && movie.Id in translation.movies) {
     titleElement.textContent = translation.movies[movie.Id].title;
-    overviewElement.textContent = translation.movies[movie.Id].description;
+    overviewElement.textContent = truncateText(translation.movies[movie.Id].description);
   } else {
     titleElement.textContent = movie.Name;
-    overviewElement.textContent = movie.Overview;
+    overviewElement.textContent = truncateText(movie.Overview);
   }
 
   clearPlayer();

@@ -213,7 +213,7 @@ div#login-selector- form-buttons {
   align-items: center;
   font-size: var(--jellix-movie-info-font-size);
   margin-bottom: 2vh;
-  width: 40vw;
+  width: 60vw;
   padding: 1vh;
   background: rgb(0,0,0);
   background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.19931722689075626) 88%, rgba(0,0,0,0) 100%);
