@@ -5,7 +5,7 @@ var listsIdx = 0;
 var activeSwiper;
 var slideIdx;
 var translation;
-const moviesSliderStartCount = 20;
+const moviesSliderStartCount = 5; // reduce load on server
 const seed = parseInt(new Date().toISOString().slice(0, 10).replace(/-/g, ''));
 let settings = {
   filterHidePlayed: true,
@@ -17,7 +17,7 @@ let settings = {
   fontSize: 100,
   showNav: false,
   lang: null,
-  trailer_timer: 7,
+  trailer_timer: 2,
 };
 
 const genresOrder = [

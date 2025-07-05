@@ -182,8 +182,6 @@ div#login-selector- form-buttons {
 .feature {
   position: relative;
   color: #fff;
-  height: 45vh; /* Allocate top 45% of viewport height to feature area */
-  overflow: hidden; /* Prevent content from spilling out of its allocated height */
 }
 
 .movie-details {
@@ -223,11 +221,10 @@ div#login-selector- form-buttons {
 
 .movie-overview {
   color: white;
-  max-height: 15vh; /* Constrain height */
-  overflow-y: auto; /* Allow scrolling for overflow */
-  padding-right: 10px; /* Space for scrollbar */
-  box-sizing: border-box; /* Ensure padding is included within the element's width/height */
+  
+  overflow-block: auto;
 }
+
 .movie-title {
   font-size: 4vw;
   font-weight: bold;
@@ -296,22 +293,15 @@ div#login-selector- form-buttons {
 .lists-container {
   padding-top: 1vh;
   position: absolute;
-  /* bottom: 0; */ /* Changed to top positioning */
-  top: 50vh; /* Start below the .feature area */
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 50vh); /* Fill remaining viewport height */
-  /* margin-bottom: -15%; */ /* Removed, as it complicates top/height positioning */
-  overflow: visible; /* For Swiper slides peeking */
+  bottom: 0;
   z-index: 50;
-  box-sizing: border-box; /* padding-top should not add to height */
+  /*margin-bottom: -15%;
+  overflow: visible;*/
+  height: calc(100vh - 60vh);
 }
 
 .lists-container .container {
-  /* overflow: hidden; */ /* Allowing content to determine height, may need overflow:auto if content can exceed screen */
-  height: 100%; /* Fill the height of .lists-container */
-  overflow-y: auto; /* Allow vertical scrolling of multiple .thumbnail-group rows */
-  overflow-x: hidden; /* Prevent horizontal scrollbar from vertical scrollbar */
+  overflow: hidden;
 }
 
 .thumbnails-group {
@@ -477,16 +467,13 @@ div#login-selector- form-buttons {
 
 #player-container, .background-container {
   position: absolute;
-  width: 100vw; /* Cover full viewport width */
-  height: 100vh; /* Cover full viewport height */
+  width: 70%;
+  height: 70%;
+  right: 0;
   top: 0;
-  left: 0;
-  /* right: 0; Removed as left is now set */
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center; /* Center the image */
   transition: background-image 0.2s ease-in-out;
-  /* z-index might be needed if it conflicts, but typically as an early DOM element it should be fine. */
 }
 
 #player-container::before, .background-container::before {
