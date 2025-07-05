@@ -1,6 +1,6 @@
 const tokenKey = 'accessToken';
 const device = 'Device';
-const client = 'Jellix';
+const client = 'Byrotube';
 const client_version = '0.0.1';
 var device_id = localStorage.getItem('deviceId');
 
